@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>List boxes</shortname>
+	<description>List available boxes for the user</description>
+	<url>/imaging/boxes/listboxes</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

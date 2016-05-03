@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Is the image linkable</shortname>
+	<description>Depending the context check is image is linkable based on its document type</description>
+	<url>/imaging/pb/islinkable</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

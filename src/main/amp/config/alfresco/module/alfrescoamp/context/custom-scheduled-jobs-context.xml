@@ -1,0 +1,405 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+
+	<!-- Manage our JMX MBean -->
+	
+	<bean id="ImagingJMXJobs" class="org.springframework.jmx.export.MBeanExporter">
+	  <property name="server" ref="alfrescoMBeanServer"/>
+	  <property name="beans">
+	    <map>
+	      <entry key="Imaging:type=Jobs,name=DropZone" value-ref="dropZoneTriggerManager"/>
+	      <entry key="Imaging:type=Jobs,name=MoveToDropZone2" value-ref="moveToDropZone2TriggerManager"/>
+	      <entry key="Imaging:type=Jobs,name=Uewi Migration" value-ref="uewiMigrationTriggerManager"/>
+	      <entry key="Imaging:type=Jobs,name=Update Migrated Docs" value-ref="updateMigratedDocsTriggerManager"/>
+	      <entry key="Imaging:type=Jobs,name=Complete Migrated Imports" value-ref="completeMigratedImportsTriggerManager"/>
+	      <entry key="Imaging:type=Jobs,name=AuditCleaner" value-ref="auditCleanerTriggerManager"/>
+	      <entry key="Imaging:type=Jobs,name=TrashcanCleaner" value-ref="trashcanCleanerTriggerManager"/>
+	    </map>
+	  </property>
+	  <property name="assembler">
+	    <bean class="org.springframework.jmx.export.assembler.InterfaceBasedMBeanInfoAssembler">
+	      <property name="managedInterfaces">
+	        <value>be.fsoffe.imaging.scheduled.CronTriggerBeanManagerInterface</value>
+	      </property>
+	    </bean>
+	  </property>
+	</bean>
+	
+	<!--  MOVE TO DROPZONE2 JOB -->
+	
+	<bean id="moveToDropZone2Job" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>be.fsoffe.imaging.scheduled.MoveToDropZone2Job</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="nodeService">
+					<ref bean="nodeService" />
+				</entry>
+				<entry key="fileFolderService">
+					<ref bean="fileFolderService" />
+				</entry>
+				<entry key="contentService">
+					<ref bean="contentService" />
+				</entry>
+				<entry key="transactionService">
+					<ref bean="transactionService" />
+				</entry>
+				<entry key="pathToImaging">
+			        <value>${fsoffe.path.toimaging}</value>
+			    </entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="moveToDropZone2TriggerManager" class="be.fsoffe.imaging.scheduled.CronTriggerBeanManager">
+	  <property name="triggerBean" ref="moveToDropZone2Trigger"/>
+	</bean>
+
+	<bean id="moveToDropZone2Trigger" class="org.alfresco.util.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="moveToDropZone2Job" />
+		</property>
+		<property name="scheduler">
+			<ref bean="schedulerFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${fsoffe.movetodropzone2job.cron}</value>
+		</property>
+	</bean>
+	
+	<!--  JOB THAT CHECK OLD STATISTIC ITEMS TO BE REMOVED  -->
+	
+	<bean id="outboxCleanerJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>be.fsoffe.imaging.scheduled.OutboxCleanerJob</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="nodeService">
+					<ref bean="nodeService" />
+				</entry>
+				<entry key="searchService">
+					<ref bean="searchService" />
+				</entry>
+				<entry key="transactionService">
+					<ref bean="transactionService" />
+				</entry>
+				<entry key="nbdaysexpiration">
+					<value>${fsoffe.outboxcleanerjob.nbdays}</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="outboxCleanerTrigger" class="org.alfresco.util.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="outboxCleanerJob" />
+		</property>
+		<property name="scheduler">
+			<ref bean="schedulerFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${fsoffe.outboxcleanerjob.cron}</value>
+		</property>
+	</bean>
+	
+	<!--  JOB THAT CHECK DOCUMENTS SEND TO MYPERSONAL FOR TOO LONG WITHOUT RESPONSE AND RELEASE THEM  -->
+	
+	<bean id="myPersonalExpirationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>be.fsoffe.imaging.scheduled.MyPersonalExpirationJob</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="nodeService">
+					<ref bean="nodeService" />
+				</entry>
+				<entry key="searchService">
+					<ref bean="searchService" />
+				</entry>
+				<entry key="transactionService">
+					<ref bean="transactionService" />
+				</entry>
+				<entry key="nbdaysexpiration">
+					<value>${fsoffe.mypersonalexpirationjob.nbdays}</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="myPersonalExpirationTrigger" class="org.alfresco.util.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="myPersonalExpirationJob" />
+		</property>
+		<property name="scheduler">
+			<ref bean="schedulerFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${fsoffe.mypersonalexpirationjob.cron}</value>
+		</property>
+	</bean>
+	
+	<!--  JOB THAT MANAGE INCOMING DOCUMENTS FROM SCANNER OR MAIL (Kofax) -->
+	
+	<bean id="dropZoneJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>be.fsoffe.imaging.scheduled.DropZoneJob</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="nodeService">
+					<ref bean="nodeService" />
+				</entry>
+				<entry key="fileFolderService">
+					<ref bean="fileFolderService" />
+				</entry>
+				<entry key="contentService">
+					<ref bean="contentService" />
+				</entry>
+				<entry key="transactionService">
+					<ref bean="transactionService" />
+				</entry>
+				<entry key="minutestowait">
+					<value>${fsoffe.dropzonejob.minutestowait}</value>
+				</entry>
+				<entry key="pathToArchive">
+			        <value>${fsoffe.path.archive}</value>
+			    </entry>
+			    <entry key="pathToCertificate">
+			        <value>${fsoffe.path.certificate}</value>
+			    </entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="dropZoneTriggerManager" class="be.fsoffe.imaging.scheduled.CronTriggerBeanManager">
+	  <property name="triggerBean" ref="dropZoneTrigger"/>
+	</bean>
+
+	<bean id="dropZoneTrigger" class="org.alfresco.util.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="dropZoneJob" />
+		</property>
+		<property name="scheduler">
+			<ref bean="schedulerFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${fsoffe.dropzonejob.cron}</value>
+		</property>
+	</bean>
+	
+	<!--  JOB THAT MANAGE MIGRATION -->
+	
+	<bean id="uewiMigrationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>be.fsoffe.imaging.migrator.job.UewiMigrationJob</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="uewiDocumentDao">
+					<ref bean="uewiDocumentDao" />
+				</entry>
+				<entry key="clientServerImageDao">
+					<ref bean="clientServerImageDao" />
+				</entry>
+				<entry key="alfRepoService">
+					<ref bean="alfrescoRepositoryService" />
+				</entry>
+				<entry key="fileSystemService">
+					<ref bean="migratorFileSystemService" />
+				</entry>
+				<entry key="annotationService">
+					<ref bean="migratorAnnotationService" />
+				</entry>
+				<entry key="transactionService">
+					<ref bean="transactionService" />
+				</entry>
+				<entry key="environment">
+					<value>${fsoffe.uewimigrationjob.environment}</value>
+				</entry>
+				<entry key="wipmode">
+					<value>${fsoffe.uewimigrationjob.wipmode}</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="uewiMigrationTriggerManager" class="be.fsoffe.imaging.scheduled.CronTriggerBeanManager">
+	  <property name="triggerBean" ref="uewiMigrationTrigger"/>
+	</bean>
+
+	<bean id="uewiMigrationTrigger" class="org.alfresco.util.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="uewiMigrationJob" />
+		</property>
+		<property name="scheduler">
+			<ref bean="schedulerFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${fsoffe.uewimigrationjob.cron}</value>
+		</property>
+	</bean>
+	
+	<!--  JOB THAT MANAGE DOCUMENT UPGRADE - POST MIGRATION -->
+	
+	<bean id="updateMigratedDocsJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>be.fsoffe.imaging.migrator.job.UpdateMigratedDocsJob</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="uewiDocumentDao">
+					<ref bean="uewiDocumentDao" />
+				</entry>
+				<entry key="csImageDao">
+					<ref bean="clientServerImageDao" />
+				</entry>
+				<entry key="alfRepoService">
+					<ref bean="alfrescoRepositoryService" />
+				</entry>
+				<entry key="transactionService">
+					<ref bean="transactionService" />
+				</entry>
+				<entry key="environment">
+					<value>${fsoffe.uewimigrationjob.environment}</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="updateMigratedDocsTriggerManager" class="be.fsoffe.imaging.scheduled.CronTriggerBeanManager">
+	  <property name="triggerBean" ref="updateMigratedDocsTrigger"/>
+	</bean>
+
+	<bean id="updateMigratedDocsTrigger" class="org.alfresco.util.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="updateMigratedDocsJob" />
+		</property>
+		<property name="scheduler">
+			<ref bean="schedulerFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${fsoffe.updatemigrateddocsjob.cron}</value>
+		</property>
+	</bean>
+	
+	<!--  JOB THAT MANAGE COMPLETE IMPORTED IMPORTS - POST MIGRATION -->
+	
+	<bean id="completeMigratedImportsJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>be.fsoffe.imaging.migrator.job.CompleteMigratedImportsJob</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="uewiDocumentDao">
+					<ref bean="uewiDocumentDao" />
+				</entry>
+				<entry key="fileSystemService">
+					<ref bean="migratorFileSystemService" />
+				</entry>
+				<entry key="alfRepoService">
+					<ref bean="alfrescoRepositoryService" />
+				</entry>
+				<entry key="transactionService">
+					<ref bean="transactionService" />
+				</entry>
+				<entry key="environment">
+					<value>${fsoffe.uewimigrationjob.environment}</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="completeMigratedImportsTriggerManager" class="be.fsoffe.imaging.scheduled.CronTriggerBeanManager">
+	  <property name="triggerBean" ref="completeMigratedImportsTrigger"/>
+	</bean>
+
+	<bean id="completeMigratedImportsTrigger" class="org.alfresco.util.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="completeMigratedImportsJob" />
+		</property>
+		<property name="scheduler">
+			<ref bean="schedulerFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${fsoffe.completemigratedimportsjob.cron}</value>
+		</property>
+	</bean>
+	
+	<!--  JOB THAT CLEAN THE AUDIT TABLE FOR DUPLICATE ENTRIES FOR THE SAME DATE -->
+	
+	<bean id="auditCleanerJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>be.fsoffe.imaging.scheduled.AuditCleanerJob</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="transactionService">
+					<ref bean="transactionService" />
+				</entry>
+				<entry key="imagingAuditService">
+					<ref bean="imagingAuditService" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="auditCleanerTriggerManager" class="be.fsoffe.imaging.scheduled.CronTriggerBeanManager">
+	  <property name="triggerBean" ref="auditCleanerTrigger"/>
+	</bean>
+
+	<bean id="auditCleanerTrigger" class="org.alfresco.util.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="auditCleanerJob" />
+		</property>
+		<property name="scheduler">
+			<ref bean="schedulerFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${fsoffe.auditcleanerjob.cron}</value>
+		</property>
+	</bean>
+	
+	<!--  JOB THAT CLEAN THE TRASHCAN -->
+	
+	<bean id="trashcanCleanerJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass">
+			<value>be.fsoffe.imaging.scheduled.TrashcanCleanerJob</value>
+		</property>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="transactionService">
+					<ref bean="transactionService" />
+				</entry>
+				<entry key="nodeService">
+					<ref bean="nodeService" />
+				</entry>
+				<entry key="batchCount">
+					<value>${fsoffe.trashcancleanerjob.batchcount}</value>
+				</entry>
+				<entry key="daysToKeep">
+					<value>${fsoffe.trashcancleanerjob.daystokeep}</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="trashcanCleanerTriggerManager" class="be.fsoffe.imaging.scheduled.CronTriggerBeanManager">
+	  <property name="triggerBean" ref="trashcanCleanerTrigger"/>
+	</bean>
+
+	<bean id="trashcanCleanerTrigger" class="org.alfresco.util.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="trashcanCleanerJob" />
+		</property>
+		<property name="scheduler">
+			<ref bean="schedulerFactory" />
+		</property>
+		<property name="cronExpression">
+			<value>${fsoffe.trashcancleanerjob.cron}</value>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,4 @@
+{
+	"vtihost" : "${vtihost}",
+	"vtiport" : "${vtiport}"
+}

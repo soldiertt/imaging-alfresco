@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING/DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- ************** JS API EXTENSION ******************* -->
+
+	<bean id="SudoScript" parent="baseJavaScriptExtension" class="be.fsoffe.imaging.webscript.SudoScript">
+        <property name="extensionName">
+            <value>sudoScript</value>
+        </property>
+        <property name="allowedScripts">
+          <list>
+            <value>alfresco/extension/script/auditBoxIn.js</value>
+            <value>alfresco/extension/script/auditBoxOut.js</value>
+          </list>
+        </property>
+    </bean>
+    
+	<bean id="imagingScript" parent="baseJavaScriptExtension" class="be.fsoffe.imaging.webscript.ImagingScript">
+      <property name="extensionName">
+        <value>imaging</value>
+      </property>
+      <property name="personService">
+        <ref bean="PersonService" />
+      </property>
+      <property name="nodeService">
+        <ref bean="NodeService" />
+      </property>   
+      <property name="permissionService">
+        <ref bean="PermissionService" />
+      </property> 
+      <property name="contentService">
+        <ref bean="ContentService" />
+      </property>
+      <property name="imagingAuditService">
+        <ref bean="imagingAuditService" />
+      </property>
+      <property name="clientServerService">
+        <ref bean="clientServerService" />
+      </property>
+      <property name="pathToArchive">
+        <value>${fsoffe.path.archive}</value>
+      </property>
+      <property name="pathToCertificate">
+        <value>${fsoffe.path.certificate}</value>
+      </property>
+      <property name="evaluatorRegistry" ref="evaluator.registry" /> 
+      <property name="globalProperties" ref="global-properties" />
+    </bean>
+	
+	<!-- ************** OTHER WEBSCRIPTS ******************* -->
+
+	<!--  RENDER ACTIONS WEBSCRIPT  -->
+	<bean id="webscript.be.fsoffe.action.renderdocactions.get" class="be.fsoffe.imaging.webscript.RenderDocActionsWs" 
+		parent="webscript">
+		<property name="evaluatorRegistry" ref="evaluator.registry" />
+	</bean>
+		
+	<!--  LIST BOXES WEBSCRIPT  -->
+	<bean id="webscript.be.fsoffe.boxes.listboxes.get" class="be.fsoffe.imaging.webscript.ListBoxesWs"
+		parent="webscript">
+		<property name="repository" ref="repositoryHelper" />
+		<property name="serviceRegistry" ref="ServiceRegistry" />
+	</bean>
+	
+	<!--  KEYWORD LIST WEBSCRIPT  -->
+	<bean id="webscript.be.fsoffe.dataLists.keywordsDataList.get" class="be.fsoffe.imaging.webscript.KeywordsDataListWs"
+		parent="webscript">
+		<property name="csService" ref="clientServerService" />
+	</bean>
+	
+	<!--  SEARCH WEBSCRIPT  -->
+	<bean id="webscript.be.fsoffe.search.search.get" class="be.fsoffe.imaging.webscript.SearchWs"
+		parent="webscript">
+		<property name="serviceRegistry" ref="ServiceRegistry" />
+	</bean>
+	
+	<!--  READ PB CONTEXT WEBSCRIPT  -->
+	<bean id="webscript.be.fsoffe.pb.readcontext.get" class="be.fsoffe.imaging.pb.webscript.ReadContextWs"
+		parent="webscript">
+		<property name="serviceRegistry" ref="ServiceRegistry" />
+		<property name="csService" ref="clientServerService" />
+	</bean>
+	
+	<!--  LIST IMAGES FROM PB CONTEXT WEBSCRIPT  -->
+	<bean id="webscript.be.fsoffe.pb.list.get" class="be.fsoffe.imaging.pb.webscript.ListWs"
+		parent="webscript">
+		<property name="serviceRegistry" ref="ServiceRegistry" />
+		<property name="csService" ref="clientServerService" />
+	</bean>
+	
+	<!--  PB IS LINKABLE WEBSCRIPT  -->
+	<bean id="webscript.be.fsoffe.pb.islinkable.get" class="be.fsoffe.imaging.pb.webscript.IsLinkableWs"
+		parent="webscript">
+		<property name="serviceRegistry" ref="ServiceRegistry" />
+		<property name="csService" ref="clientServerService" />
+	</bean>
+	
+	<!--  PB IS LINKABLE WEBSCRIPT  -->
+	<bean id="webscript.be.fsoffe.pb.linkimage.post" class="be.fsoffe.imaging.pb.webscript.LinkImageWs"
+		parent="webscript">
+		<property name="serviceRegistry" ref="ServiceRegistry" />
+		<property name="csService" ref="clientServerService" />
+	</bean>
+</beans>

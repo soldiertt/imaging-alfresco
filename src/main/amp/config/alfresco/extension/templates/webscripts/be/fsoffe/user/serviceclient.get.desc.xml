@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Check if user is member of service client</shortname>
+	<description>Check if user is member of service client</description>
+	<url>/imaging/user/serviceclient</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

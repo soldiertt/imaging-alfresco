@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>List documents in administration view</shortname>
+	<description>List documents in administration view</description>
+	<url>/imaging/boxes/admin</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

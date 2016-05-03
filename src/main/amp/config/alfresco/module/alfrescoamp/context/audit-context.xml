@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<beans>
+
+	<bean id="auditEventDao" class="be.fsoffe.imaging.audit.dao.AuditEventDaoJdbc">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	
+	<bean id="imagingAuditService" class="be.fsoffe.imaging.audit.service.ImagingAuditService">
+		<property name="auditDao">
+			<ref bean="auditEventDao" />
+		</property>
+	</bean>
+	
+</beans>

@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Upload new import file</shortname>
+	<description>Upload new import file</description>
+	<url>/imaging/document/uploadimport</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

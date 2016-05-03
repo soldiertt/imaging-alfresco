@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>List all users of a specific box</shortname>
+	<description>List all users of a specific box</description>
+	<url>/imaging/user/boxusers</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Send</shortname>
+	<description>Send to any personal box</description>
+	<url>/imaging/action/send</url>
+	<authentication>user</authentication>
+	<family>Imaging Actions</family>
+	<format default="json">argument</format>
+</webscript>

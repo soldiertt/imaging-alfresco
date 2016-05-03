@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>List documents in a my personal</shortname>
+	<description>List available documents inside my personal</description>
+	<url>/imaging/boxes/mypersonal</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

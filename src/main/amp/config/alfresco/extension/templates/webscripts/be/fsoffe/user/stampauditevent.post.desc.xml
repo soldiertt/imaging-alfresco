@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Log an audit event</shortname>
+	<description>Log an audit event for the initials stamp</description>
+	<url>/imaging/user/stampauditevent</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

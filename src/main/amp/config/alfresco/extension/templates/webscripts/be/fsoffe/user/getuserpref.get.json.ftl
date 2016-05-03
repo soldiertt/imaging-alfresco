@@ -1,0 +1,3 @@
+{
+"prefValue" : "${prefValue?string}"
+}

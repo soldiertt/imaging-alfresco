@@ -1,0 +1,4 @@
+{
+"hasaspect" : "${hasaspect}",
+"isinmyworkitem" : "${isinmyworkitem}"
+}

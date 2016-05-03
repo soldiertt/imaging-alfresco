@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Evaluate actions to render</shortname>
+	<description>List available actions upon a fds document</description>
+	<url>/imaging/action/renderdocactions</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Check is in my workitem</shortname>
+	<description>Check is in my workitem</description>
+	<url>/imaging/utils/isinmyworkitem</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

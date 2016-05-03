@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Keywords Data List</shortname>
+  <description>Keywords Data List</description>
+  <url>/be/fsoffe/keywordsDataList</url>
+  <family>FSO-FFE</family>
+  <format default="json"/>
+  <authentication>user</authentication>
+</webscript>

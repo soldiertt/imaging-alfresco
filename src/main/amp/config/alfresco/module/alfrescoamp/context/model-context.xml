@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<beans>
+
+	<!-- Registration of new models -->
+	<bean id="fsoffe.dictionaryBootstrap" parent="dictionaryModelBootstrap" depends-on="dictionaryBootstrap">
+		<property name="models">
+			<list>
+				<value>alfresco/module/alfrescoamp/model/fsoffeModel.xml</value>
+			</list>
+		</property>
+	</bean>
+		
+	<!-- Allows override of web-client-config.xml -->
+	
+	<bean id="fsoffe_configBootstrap" class="org.alfresco.web.config.WebClientConfigBootstrap" init-method="init">
+		<property name="configs">
+			<list>
+				<value>classpath:alfresco/module/alfrescoamp/web-client-config-custom.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+</beans>

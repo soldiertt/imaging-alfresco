@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Release action if not already done</shortname>
+	<description>Remove aspect Work item from fds document</description>
+	<url>/imaging/action/releaseoptional</url>
+	<authentication>user</authentication>
+	<family>Imaging Actions</family>
+	<format default="json">argument</format>
+</webscript>

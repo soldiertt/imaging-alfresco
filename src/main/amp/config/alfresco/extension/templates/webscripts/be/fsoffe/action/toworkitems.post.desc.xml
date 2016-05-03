@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>To work items action</shortname>
+	<description>Apply aspect Work item to fds document</description>
+	<url>/imaging/action/toworkitems</url>
+	<authentication>user</authentication>
+	<family>Imaging Actions</family>
+	<format default="json">argument</format>
+</webscript>

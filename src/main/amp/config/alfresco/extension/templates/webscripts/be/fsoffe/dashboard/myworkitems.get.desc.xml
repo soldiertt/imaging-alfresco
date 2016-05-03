@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>List user work items</shortname>
+	<description>List available work items for the user</description>
+	<url>/imaging/dashboard/myworkitems</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

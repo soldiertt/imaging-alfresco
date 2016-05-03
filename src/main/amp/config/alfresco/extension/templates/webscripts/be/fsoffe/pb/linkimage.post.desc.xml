@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Link image in C/S database</shortname>
+	<description>Link image in C/S database</description>
+	<url>/imaging/pb/linkimage</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

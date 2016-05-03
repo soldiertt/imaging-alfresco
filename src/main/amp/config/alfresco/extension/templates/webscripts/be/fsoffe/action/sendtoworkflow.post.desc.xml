@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Move back a document to entry</shortname>
+	<description>Move back a document to entry</description>
+	<url>/imaging/action/sendtoworkflow</url>
+	<authentication>user</authentication>
+	<family>Imaging Actions</family>
+	<format default="json">argument</format>
+</webscript>

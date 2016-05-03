@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="imagingMappingWorkflow" name="FSO FFE Imaging Mapping Workflow" isExecutable="true">
+    <startEvent id="alfrescoStartevent1" name="Alfresco start" activiti:formKey="fdswk:startImaging"></startEvent>
+    <serviceTask id="alfrescoScripttask1" name="Start Mapping" activiti:class="org.alfresco.repo.workflow.activiti.script.AlfrescoScriptDelegate">
+      <extensionElements>
+        <activiti:field name="script">
+          <activiti:string>logger.log("Start Task Start Mapping");
+logger.log("------------------------");
+for(var i=0;i&lt;bpm_package.children.length;i++) {
+
+	// The Attached Document 
+	var document = bpm_package.children[i];
+	
+	logger.log("document " + document.name);
+
+	var typeDocument = document.properties["fds:docType"];
+	var docClass = document.properties["fds:docClass"];
+	var docSource = document.properties["fds:docSource"];
+	
+	logger.log("typeDocument "+typeDocument);
+	logger.log("docClass "+docClass);
+	logger.log("docSource "+docSource);
+	
+	var workExpeditor="";
+	
+	if(docSource == "mail") {
+		workExpeditor = "Mail" ;
+	} else if (docSource == "scanner") {
+		workExpeditor = "Scanner" ;
+	} else if (docSource == "upload") {
+		workExpeditor = "Upload" ;
+	} else if (docSource == "printer") {
+		workExpeditor = "Printer" ;
+	} else if (docSource == "fax") {
+		workExpeditor = "Fax" ;
+	}
+	logger.log("workExpeditor "+workExpeditor);
+	
+	var jsonDoc = document.childByNamePath("workflow.json");
+  
+	var workAssignee = "";
+	var docDossierNr = "0";
+	var workDossierStatus = 0;
+	if (jsonDoc != null) {
+		var jsonObj = eval('(' + jsonDoc.content + ')');
+		if (jsonObj.hasOwnProperty('assignee')) {
+			workAssignee = jsonObj.assignee;
+		}
+		if (jsonObj.hasOwnProperty('dossiernr')) {
+			docDossierNr = jsonObj.dossiernr;
+		}
+		if (jsonObj.hasOwnProperty('dossierstatus')) {
+			workDossierStatus = jsonObj.dossierstatus;
+		} 
+	}
+	if (!document.hasAspect("fds:workflow")) {
+		document.addAspect("fds:workflow");
+		
+		document.properties["fds:workExpeditor"] = workExpeditor;
+		if (workAssignee != "") {
+			document.properties["fds:workAssignee"] = workAssignee;
+		}
+		if (docDossierNr != "0") {
+			document.properties["fds:docDossierNr"] = docDossierNr;
+		}
+		if (workDossierStatus != 0) {
+			document.properties["fds:workDossierStatus"] = workDossierStatus;
+		}
+		document.properties["fds:varDestination"] = "" ;
+		document.properties["fds:varStandardWorkset"] = "" ;
+		document.properties["fds:varCountCollaborative"] = 0 ;
+		document.properties["fds:varFirstRun"] = true ;
+		document.properties["fds:varDefaultDestination"] = "EXIT" ;
+		document.properties["fds:workBox"] = "EXIT" ;
+		document.save();
+	}
+	
+	// Generate thumbnail
+    var mainPdf = document.childByNamePath(document.name + ".pdf");
+    mainPdf.createThumbnail("imgpreview", true);
+    
+}</activiti:string>
+        </activiti:field>
+        <activiti:field name="runAs">
+          <activiti:string>admin</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow1" sourceRef="alfrescoStartevent1" targetRef="alfrescoScripttask1"></sequenceFlow>
+    <serviceTask id="alfrescoScripttask2" name="Mapping" activiti:class="org.alfresco.repo.workflow.activiti.script.AlfrescoScriptDelegate">
+      <extensionElements>
+        <activiti:field name="script">
+          <activiti:string>/*
+	Algo
+	
+	Recup le type de document ...
+	
+	Si une condition particulière existe, il faut la coder manuellement
+	Requete de recherche dans la datalist pour recupérer la box d'output.
+	
+	
+ */
+
+/**
+ * getParamMapping
+ * @param typeDocument 	optional
+ *
+ * @return resultBoxes return the destination boxes
+ */
+function getParamMapping(typeDocument) {
+	var resultBoxes=null;
+	if (typeDocument === "") {
+		typeDocument = "NONE";
+	}
+	var docquery = "select e.fds:routineTableOutput from fds:routingTableDataList as e where e.fds:docTypeDlInput='"+typeDocument+"'"; ;
+		
+	var def = {
+		query : docquery,
+		language : "cmis-alfresco"
+	
+	};
+	
+	var results = search.query(def);
+	
+	if(results != null) {
+		if(results.length &gt; 0) {
+			resultBoxes = results[0].properties["fds:routineTableOutput"];
+		}
+	}
+	return resultBoxes ;
+} 
+
+function moveToFailure(document, dossierName) {
+	var failureDestinationPath = companyhome.childByNamePath(imaging.getConstant("failureFolderName"));
+	existingDoc = failureDestinationPath.childByNamePath(dossierName);
+	if (existingDoc == null) {
+		document.move(failureDestinationPath);
+	} else {
+		var counter = 0;
+		while(existingDoc != null) {
+			counter++;
+			existingDoc = failureDestinationPath.childByNamePath(dossierName + "_" + counter);
+		}
+		document.name = dossierName + "_" + counter;
+		document.save();
+		document.move(failureDestinationPath);
+		logger.log("final document name : " + dossierName + "_" + counter);
+	}
+}
+			
+logger.log("Start Task Mapping");
+logger.log("------------------");
+
+for(var i=0;i&lt;bpm_package.children.length;i++) {
+
+	// The Attached Document 
+	var document = bpm_package.children[i];
+
+	var typeDocument = document.properties["fds:docType"];
+	var docClass = document.properties["fds:docClass"];
+	var docSource = document.properties["fds:docSource"];
+	
+	var dossierName = document.name;
+	var boxName;
+
+	logger.log("typeDocument = " + typeDocument);
+	
+	// Gestion des cas particuliers
+	if(typeDocument == "NONE") {
+		logger.log("Pas type de document");
+		if(docSource == "mail" || docSource == "fax") {
+			boxName = "FONDSBOX";
+		} else {
+			boxName = "DISPATCHING";
+		}
+	} else {
+		if(typeDocument == "NOTTOKEEP") {
+			boxName = "DISPATCHING";
+		} else {
+			if (docClass == "Archive") {
+				boxName = "LIEN-KOPPELING";
+			} else {
+				var resultMapping = getParamMapping(typeDocument);
+				
+				if(resultMapping != null) {
+					boxName = resultMapping;
+				}
+			}
+		}
+	}
+		
+	// Le dossier va etre mappee dans la bonne box
+	var boxesPath = imaging.getConstant("boxesPath");
+	var boxesDestination = boxesPath + "/" + boxName;
+	logger.log("Boxes Destination : " + boxesDestination);
+	var boxesDestinationPath = companyhome.childByNamePath(boxesDestination);
+	
+	if(boxesDestinationPath == null) {
+		logger.log("Destination of '" + dossierName + "' is unknown, document was moved to FAILURE folder.");
+		moveToFailure(document, dossierName);
+	} else {
+		logger.log("Mapping Dossier " + dossierName + " to box " + boxesDestination);
+		
+		var existingDoc = boxesDestinationPath.childByNamePath(dossierName);
+		if (existingDoc == null) {
+			document.move(boxesDestinationPath);
+		
+			if(document.hasAspect("fds:workflow")) {
+				document.properties["fds:varDestination"] = boxName;
+				document.properties["fds:workEntryTime"] = new Date();
+				document.save();
+			}
+		} else {
+			logger.log("Document with name '" + dossierName + "' already exists at destination '" + boxesDestination + "'. Document was moved to FAILURE folder.");
+			moveToFailure(document, dossierName);
+		}
+		
+	}
+}</activiti:string>
+        </activiti:field>
+        <activiti:field name="runAs">
+          <activiti:string>admin</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow4" sourceRef="alfrescoScripttask1" targetRef="alfrescoScripttask2"></sequenceFlow>
+    <intermediateCatchEvent id="timerintermediatecatchevent1" name="TimerCatchEvent">
+      <timerEventDefinition>
+        <timeDuration>PT1S</timeDuration>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <sequenceFlow id="flow5" sourceRef="alfrescoScripttask2" targetRef="timerintermediatecatchevent1"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="timerintermediatecatchevent1" targetRef="endevent1"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_imagingMappingWorkflow">
+    <bpmndi:BPMNPlane bpmnElement="imagingMappingWorkflow" id="BPMNPlane_imagingMappingWorkflow">
+      <bpmndi:BPMNShape bpmnElement="alfrescoStartevent1" id="BPMNShape_alfrescoStartevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="70.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="alfrescoScripttask1" id="BPMNShape_alfrescoScripttask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="150.0" y="130.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="alfrescoScripttask2" id="BPMNShape_alfrescoScripttask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="130.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="506.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="timerintermediatecatchevent1" id="BPMNShape_timerintermediatecatchevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="450.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="105.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="150.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="255.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="320.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="425.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="450.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="485.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="506.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

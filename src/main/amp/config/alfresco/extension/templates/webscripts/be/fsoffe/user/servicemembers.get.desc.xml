@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>List all members a service leader can see</shortname>
+	<description>List all members a service leader can see</description>
+	<url>/imaging/user/servicemembers</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

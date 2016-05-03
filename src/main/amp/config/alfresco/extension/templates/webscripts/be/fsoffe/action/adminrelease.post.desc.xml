@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Release a locked document</shortname>
+	<description>Remove aspect workitem or mypersonal from fds document</description>
+	<url>/imaging/action/adminrelease</url>
+	<authentication>user</authentication>
+	<family>Imaging Actions</family>
+	<format default="json">argument</format>
+</webscript>

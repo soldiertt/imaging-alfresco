@@ -1,0 +1,56 @@
+<?xml version="1.0"?> 
+<project name="alfrescoamp-ant" default="reload-webscripts-repo"  basedir="."> 
+    
+    <!-- Tomcat properties to reload web scripts or the manager webapp -->
+    <property name="tomcat.url" value="http://te1901880:8080" /> 
+    <property name="tomcat.repo.url" value="${tomcat.url}" /> 
+    <property name="tomcat.share.url" value="${tomcat.url}" /> 
+    <!-- Tomcat properties to reload web scripts -->
+    <property name="webapp.alfresco.path" value="/alfresco" /> 
+    <property name="webapp.share.path" value="/share" /> 
+    <property name="post.verbose" value="false" /> 
+    <property name="repo.admin.username" value="jbourlet" /> 
+    <property name="repo.admin.password" value="fsoffe13" /> 
+    <property name="repo.scripts.index" value="${tomcat.repo.url}${webapp.alfresco.path}/service/index" /> 
+    <property name="share.scripts.index" value="${tomcat.share.url}${webapp.share.path}/page/index" /> 
+  
+    <path id="ml-ant-http.classpath"> 
+        <fileset dir="lib"> 
+            <include name="ml-ant-http-1.1.3.jar" /> 
+        </fileset> 
+    </path> 
+  
+    <taskdef name="http" classname="org.missinglink.ant.task.http.HttpClientTask"> 
+        <classpath> 
+            <path refid="ml-ant-http.classpath" /> 
+        </classpath> 
+    </taskdef> 
+  
+    <!-- 
+    Web script reloading from Ant. These tasks use the HTTP task from 
+  
+    http://code.google.com/p/missing-link/. 
+  
+    -->
+    <target name="reload-webscripts-repo" depends="" description="Reload repository webscripts"> 
+          
+        <copy todir="c:\\javadev\\tools\\tomcat-alfresco\\webapps\\alfresco\\WEB-INF\\classes\\alfresco\\extension"> 
+            <fileset dir="src/main/amp/config/alfresco/extension" excludes="**/*.java"/> 
+         </copy> 
+          
+        <http url="${repo.scripts.index}"
+            method="POST"
+            printrequest="false"
+            printrequestheaders="false"
+            printresponse="false"
+            printresponseheaders="false"
+            expected="200"
+            failonunexpected="true"> 
+            <credentials username="${repo.admin.username}" password="${repo.admin.password}" /> 
+            <query> 
+                <parameter name="reset" value="on" /> 
+            </query> 
+        </http> 
+    </target> 
+  
+</project>

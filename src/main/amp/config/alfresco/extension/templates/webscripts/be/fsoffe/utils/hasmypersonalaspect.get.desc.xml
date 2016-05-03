@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Check my personal aspect properties</shortname>
+	<description>Check my personal aspect properties</description>
+	<url>/imaging/utils/hasmypersonalaspect</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

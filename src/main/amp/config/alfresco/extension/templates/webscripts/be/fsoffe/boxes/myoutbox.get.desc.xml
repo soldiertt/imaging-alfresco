@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>List user outbox items</shortname>
+	<description>List available outbox document for the user</description>
+	<url>/imaging/boxes/outbox</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

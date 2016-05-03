@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<model name="fdswk:fsoffeWkModel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.alfresco.org/model/dictionary/1.0 modelSchema.xsd"
+	xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+	<!-- Optional meta-data about the model -->
+	<description>FSOFFE Workflow Imaging Model</description>
+	<author>hbrasme</author>
+	<version>1.0</version>
+
+	<imports>
+		<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+		<import uri="http://www.alfresco.org/model/bpm/1.0" prefix="bpm" />
+		<import uri="http://www.alfresco.org/model/workflow/1.0" prefix="wf" />
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+		<import uri="http://fsoffe.rva.fgov.be/model/fsoffeModel/1.0" prefix="fds" />
+	</imports>
+
+	<namespaces>
+		<namespace uri="http://fsoffe.rva.fgov.be/model/fsoffeModel/workflow/1.0" prefix="fdswk" />
+	</namespaces>
+	
+	<constraints>
+		<constraint name="fdswk:wkBoxesList" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>EXIT</value>
+					<value>ADRES_ADRESSE</value>
+					<value>AFREK_PROJETS</value>
+					<value>ADRES_ADRESSE</value>
+					<value>AFROMING_ECREMAGE</value>
+					<value>ANDERE_AUTRES FIN</value>
+					<value>BRIEF_LETTRE CONTR</value>
+					<value>BRIEF_LETTRE CLIENT</value>
+					<value>BRIEF_LETTRE COMPTA</value>
+					<value>BRIEF_LETTRE TVWG</value>
+					<value>BRIEF_LETTRE TVWN</value>
+					<value>CHEF KL</value>
+					<value>CHEF TV</value>
+					<value>CHEF WG</value>
+					<value>CHEF WN</value>
+					<value>CHEFS WN</value>
+					<value>CHOM.PROV.WKL</value>
+					<value>COMPACTUS</value>
+					<value>DCD</value>
+					<value>DETAIL</value>
+					<value>DIRECTOR</value>
+					<value>DISPATCHING</value>
+					<value>EXIT</value>
+					<value>FONDSBOX</value>
+					<value>GAAJ</value>
+					<value>ID WG</value>
+					<value>LIEN_KOPPELING</value>
+					<value>ONDERZ_ENQ</value>
+					<value>PREPENSION</value>
+					<value>SV_IF</value>
+					<value>VOORBER_PREPAR</value>
+				</list>
+			</parameter>
+		</constraint>
+	</constraints>
+	
+	<types>
+		<type name="fdswk:startImaging">
+			<parent>bpm:startTask</parent>
+		</type>
+		
+		<type name="fdswk:sendMappingTask">
+			<parent>wf:adhocTask</parent>
+			<properties>
+				<property name="fdswk:messages">
+					<title>Messages</title>
+					<type>d:text</type>
+					<protected>true</protected>
+				</property>
+				<property name="fdswk:boxList">
+					<title>Box</title>
+					<type>d:text</type>
+					<constraints>
+						<constraint ref="fdswk:wkBoxesList" />
+					</constraints>
+				</property>
+				<property name="fdswk:boxDocClass">
+					<title>Doc Class</title>
+					<type>d:text</type>
+					<constraints>
+						<constraint ref="fds:docClassList" />
+					</constraints>
+				</property>
+				<property name="fdswk:boxDocType">
+					<title>Type</title>
+					<type>d:text</type>
+					<constraints>
+						<constraint ref="fds:docTypeList" />
+					</constraints>
+				</property>
+				<property name="fdswk:dossierNr">
+					<title>Document number in FFE database</title>
+					<type>d:long</type>
+				</property>
+				<property name="fdswk:boxDocStatus">
+					<title>Dossier Status</title>
+					<type>d:text</type>
+					<constraints>
+						<constraint ref="fds:docStatusList" />
+					</constraints>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>fdswk:boxAssignee</aspect>
+			</mandatory-aspects>
+		</type>
+	</types>
+	
+	<aspects>
+		<aspect name="fdswk:boxAssignee">
+			<associations>
+				<association name="fdswk:boxAssignee">
+					<source>
+						<mandatory>false</mandatory>
+						<many>false</many>
+					</source>
+					<target>
+						<class>cm:person</class>
+						<mandatory>false</mandatory>
+						<many>false</many>
+					</target>
+				</association>
+			</associations>
+		</aspect>
+	</aspects>
+	
+</model>
+

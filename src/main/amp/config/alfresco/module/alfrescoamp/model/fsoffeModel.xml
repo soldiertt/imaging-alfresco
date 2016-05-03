@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<model name="fds:fsoffeModel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.alfresco.org/model/dictionary/1.0 modelSchema.xsd"
+	xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+	<!-- Optional meta-data about the model -->
+	<description>FSOFFE Imaging Model</description>
+	<author>jbourlet</author>
+	<version>1.0</version>
+
+	<imports>
+		<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+		<import uri="http://www.alfresco.org/model/datalist/1.0" prefix="dl" />
+	</imports>
+
+	<namespaces>
+		<namespace uri="http://fsoffe.rva.fgov.be/model/fsoffeModel/1.0" prefix="fds" />
+	</namespaces>
+
+	<!-- ***************************************** -->
+	<!-- ************* CONSTRAINTS *************** -->
+	<!-- ***************************************** -->
+	<constraints>
+		
+		<constraint name="fds:mypersTypeList" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>REQUEST</value>
+					<value>RESPONSE</value>
+					<value>EXPIRED</value>
+				</list>
+			</parameter>
+		</constraint>
+				
+		<!--  USED IN fsoffeWkModel -->
+		<constraint name="fds:docTypeList" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value></value>
+					<value>BRIEF WG/LETTRE EMP</value>
+					<value>PL/LP+SYND</value>
+					<value>DIMONA/DMFA</value>
+					<value>SV/IF</value>
+					<value>VL/QUESTIONNAIRE</value>
+					<value>VRAAG SV/QUESTION IF</value>
+					<value>ONDERZOEK WB/ENQUETE BC</value>
+					<value>GERECH.REORG.JUD</value>
+					<value>BRIEF/LETTRE CUR</value>
+					<value>FRAUDE WG/EMP</value>
+					<value>AFROMING/ECREMAGE</value>
+					<value>FRAUDE WN</value>
+					<value>DCD</value>
+					<value>F1 CONTR</value>
+					<value>BRIEF/LETTRE CONTR</value>
+					<value>F1 BT CE</value>
+					<value>BRIEF/LETTRE BT CE</value>
+					<value>CHOM.PROV.WKL</value>
+					<value>AFREK+PROJECT</value>
+					<value>RED+PROJET</value>
+					<value>DETAIL SV</value>
+					<value>DETAIL CR</value>
+					<value>BRIEF TVWG</value>
+					<value>LETTRE TVWG</value>
+					<value>DOSSIER TVWN</value>
+					<value>BRIEF/LETTRE TVWN</value>
+					<value>ADRES/ADRESSE</value>
+					<value>SMS</value>
+					<value>BRIEF/LETTRE COMPTA</value>
+					<value>HONORARIA</value>
+					<value>BRIEF/LETTRE GAAJ</value>
+					<value>BRIEF KLANT</value>
+					<value>LETTRE CLIENT</value>
+					<value>COMPACTUS</value>
+					<value>ANDERE/AUTRES DIR</value>
+					<value>ANDERE/AUTRES FIN</value>
+					<value>NOTTOKEEP</value>
+				</list>
+			</parameter>
+		</constraint>
+		<!--  USED IN fsoffeWkModel -->
+		<constraint name="fds:docClassList" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value></value>
+					<value>Dossier</value>
+					<value>Archive</value>
+				</list>
+			</parameter>
+		</constraint>
+		<!--  USED IN fsoffeWkModel -->
+		<constraint name="fds:docStatusList" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>1</value>
+					<value>2</value>
+					<value>3</value>
+					<value>4</value>
+					<value>9</value>
+				</list>
+			</parameter>
+		</constraint>
+	</constraints>
+
+	<!-- ***************************************** -->
+	<!-- ************ CONTENT TYPES ************** -->
+	<!-- ***************************************** -->
+	<types>
+		<type name="fds:content">
+			<title>Imaging basic content</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="fds:contentOrigin">
+					<title>Origin</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<default>Internal</default>
+					<index enabled="false" />
+				</property>
+			</properties>
+			<mandatory-aspects>
+				 <aspect>fds:indexControl</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="fds:folder">
+			<title>Imaging basic folder</title>
+			<parent>cm:folder</parent>
+		</type>
+
+		<type name="fds:document">
+			<title>Imaging document</title>
+			<parent>fds:folder</parent>
+			<properties>
+				<!-- INDEXED FIELD : criteria in search page -->
+				<property name="fds:docType">
+					<title>Type</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="fds:docClass">
+					<title>Class</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<index enabled="false" />
+				</property>
+				<!-- INDEXED FIELD : criteria in search page -->
+				<property name="fds:docSource">
+					<title>Source</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="fds:docPriority">
+					<title>Priority</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<default>normal</default>
+					<index enabled="false" />
+				</property>
+				<!-- INDEXED FIELD : criteria in search form -->
+				<property name="fds:docLinked">
+					<title>Is document linked with FFE dossier</title>
+					<type>d:boolean</type>
+					<mandatory>true</mandatory>
+					<default>false</default>
+				</property>
+				<!-- INDEXED FIELD : criteria in search form -->
+				<property name="fds:docInDate">
+					<title>In date</title>
+					<type>d:datetime</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="fds:docLetter">
+					<title>Document letter</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+					<index enabled="false" />
+				</property>
+				<property name="fds:docLetterType">
+					<title>Letter type</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+					<index enabled="false" />
+				</property>
+				<property name="fds:docProcessedBy">
+					<title>Processed by</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+					<index enabled="false" />
+				</property>
+				<!-- INDEXED FIELD : criteria in search form -->
+				<property name="fds:docDossierNr">
+					<title>Dossier number</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+				</property>
+			</properties>			
+		</type>
+		
+		<!-- ***************************************** -->
+		<!-- ************ DATALIST TYPES ************* -->
+		<!-- ***************************************** -->
+		
+		<type name="fds:routingTableDataList">
+			<title>Routing Table DataList</title>
+			<parent>dl:dataListItem</parent>
+			<properties>
+				<!-- INDEXED FIELD : search query to route document to mapped box based on docType -->
+				<property name="fds:docTypeDlInput">
+					<title>Document Type Input</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="fds:routineTableOutput">
+					<title>Output Boxes Destination</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+			</properties>
+		</type>
+		
+		<type name="fds:standardDataList">
+			<title>Standard DataList Configuration</title>
+			<parent>dl:dataListItem</parent>
+			<properties>
+				<!-- INDEXED FIELD : search query to find datalist values based on typeParam -->
+				<property name="fds:typeParamStandard">
+					<title>Type Parameter</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<!-- INDEXED FIELD : search query (dropzone2) to find the value in datalist based on technical id -->
+				<property name="fds:techIdParamStandard">
+					<title>Technical Id</title>
+					<type>d:int</type>
+				</property>
+				<property name="fds:idParamStandard">
+					<title>Id</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<!-- INDEXED FIELD : used in a order by clause -->
+				<property name="fds:libParamStandard">
+					<title>Label</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>both</tokenised>
+					</index>
+				</property>
+			</properties>
+		</type>
+		
+		<type name="fds:boxesDataList">
+			<title>Boxes DataList Configuration</title>
+			<parent>dl:dataListItem</parent>
+			<properties>
+				<!-- INDEXED FIELD : in query to find box based on box id -->
+				<property name="fds:idBoxe">
+					<title>Id</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<!-- INDEXED FIELD : used in a order by clause -->
+				<property name="fds:libBoxe">
+					<title>Label</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<!-- INDEXED FIELD : flag in query to get active boxes -->
+				<property name="fds:stateBoxe">
+					<title>Enabled</title>
+					<type>d:boolean</type>
+				</property>
+			</properties>
+		</type>
+		
+		<type name="fds:imagingParametersList">
+			<title>Imaging Parameters List</title>
+			<parent>dl:dataListItem</parent>
+			<properties>
+				<!-- INDEXED FIELD : in query to find application parameter based on id -->
+				<property name="fds:idParam">
+					<title>Parameter's ID</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="fds:valueParam">
+					<title>Parameter's Value</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+			</properties>
+		</type>
+		
+		<type name="fds:statistiqueDataList">
+			<title>Statistique DataList Configuration</title>
+			<parent>dl:dataListItem</parent>
+			<properties>
+				<property name="fds:statIdDoc">
+					<title>Document</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:statDocName">
+					<title>Document Name</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:statDocType">
+					<title>Document Type</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:statDocFrom">
+					<title>From</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:statDocTo">
+					<title>To</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<!-- INDEXED FIELD : in query to find outbox items based on userId -->
+				<property name="fds:statActorid">
+					<title>Actor</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="fds:statActions">
+					<title>Action</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<!-- INDEXED FIELD : in order by clause for outbox query -->
+				<property name="fds:statActorEntryTime">
+					<title>Actor Time</title>
+					<type>d:datetime</type>
+				</property>
+			</properties>
+		</type>
+		
+		<type name="fds:preferencesDataList">
+			<title>Preferences DataList Configuration</title>
+			<parent>dl:dataListItem</parent>
+			<properties>
+				<!-- INDEXED FIELD : in query to find preferences based on userId -->
+				<property name="fds:prefUserid">
+					<title>Userid</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<!-- INDEXED FIELD : in query to find preferences based on prefName -->
+				<property name="fds:prefName">
+					<title>Preference name</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="fds:prefValue">
+					<title>Preference value</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+			</properties>
+		</type>
+		
+	</types>
+
+	<!-- *********************************** -->
+	<!-- ************ ASPECTS ************** -->
+	<!-- *********************************** -->
+	<aspects>
+
+		<!-- Override indexControl default values -->
+		<aspect name="fds:indexControl">
+		    <title>fds Index Control</title>
+		    <parent>cm:indexControl</parent>
+		    <overrides>
+		        <property name="cm:isContentIndexed">
+	               <default>false</default>
+	            </property>
+		    </overrides>
+		</aspect>
+
+		<aspect name="fds:archived">
+			<title>Archived document Aspect</title>
+			<description>Applied as soon as document was archived</description>
+			<properties>
+				<property name="fds:archivedDate">
+					<title>Archiving date</title>
+					<type>d:datetime</type>
+					<mandatory>true</mandatory>
+					<index enabled="false" />
+				</property>
+			</properties>
+		</aspect>
+
+		<aspect name="fds:legacyDoc">
+			<title>Legacy document Aspect</title>
+			<description>Applied on a migrated document</description>
+			<properties>
+				<property name="fds:legacyDocId">
+					<title>Document Id</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:legacyWip">
+					<title>Work in progress</title>
+					<type>d:boolean</type>
+					<index enabled="false" />
+				</property>
+			</properties>
+		</aspect>
+		
+		<aspect name="fds:outgoing">
+			<title>Outgoing aspect</title>
+			<description>Applied to an outgoing local import</description>
+		</aspect>
+		
+		<aspect name="fds:workflow">
+			<title>Workflow Aspect</title>
+			<description>Applied on any document in a workflow</description>
+			<properties>
+				<property name="fds:workExpeditor">
+					<title>Expeditor</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<!-- INDEXED FIELD : in query to find tasks of user -->
+				<property name="fds:workAssignee">
+					<title>Assignee</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="fds:workBox">
+					<title>Box</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:workEntryTime">
+					<title>Entry time</title>
+					<type>d:datetime</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:workDossierStatus">
+					<title>Status</title>
+					<type>d:int</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:workPending">
+					<title>Pending</title>
+					<type>d:boolean</type>
+					<default>false</default>
+					<index enabled="false" />
+				</property>
+				<property name="fds:wkMessage">
+					<title>Message</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				
+				<!-- Workflow Static Properties -->
+				<property name="fds:varDestination">
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:varDefaultDestination">
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:varStandardWorkset">
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:varNextWorkset">
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:varCountCollaborative">
+					<type>d:int</type>
+					<index enabled="false" />
+				</property>
+				<property name="fds:varFirstRun">
+					<type>d:boolean</type>
+					<index enabled="false" />
+				</property>
+			</properties>
+		</aspect>
+		
+		<aspect name="fds:workitem">
+			<title>WorkItem Aspect</title>
+			<description>Applied on any document in progress by a user</description>
+			<properties>
+				<!-- INDEXED FIELD : used in query to find items in workitem based on userId -->
+				<property name="fds:itemOwner">
+					<title>Owner</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="fds:itemEntryTime">
+					<title>Since</title>
+					<type>d:datetime</type>
+					<index enabled="false" />
+				</property>
+			</properties>
+		</aspect>
+		
+		<aspect name="fds:mypersonalCandidate">
+			<title>Candidate to My Personal Aspect</title>
+			<description>Applied before send to default and replaced by mypersonal aspect afterward</description>
+		</aspect>
+		
+		<aspect name="fds:mypersonal">
+			<title>My Personal Aspect</title>
+			<description>Applied on any fds:document in progress by a user</description>
+			<properties>
+				<!--  INDEXED FIELD : needed to search for REQUEST type in scheduled job -->
+				<property name="fds:mypersType">
+					<title>Type</title>
+					<type>d:text</type>
+					<mandatory enforced='true'>true</mandatory>
+					<default>REQUEST</default>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+					<constraints>
+						<constraint ref="fds:mypersTypeList" />
+					</constraints>
+				</property>
+				<!--  INDEXED FIELD : in query to get My personal documents based on userId -->
+				<property name="fds:mypersAssignee">
+					<title>Assignee</title>
+					<type>d:text</type>
+					<index enabled="true">
+						<tokenised>false</tokenised>
+					</index>
+				</property>
+				<property name="fds:mypersExpeditor">
+					<title>Expeditor</title>
+					<type>d:text</type>
+					<index enabled="false" />
+				</property>
+				<!--  INDEXED FIELD : needed to search for entryTime in scheduled job -->
+				<property name="fds:mypersEntrytime">
+					<title>Since</title>
+					<type>d:datetime</type>
+				</property>
+			</properties>
+		</aspect>
+		
+		<aspect name="fds:keywordsAspect">
+			<title>Keywords Aspect</title>
+			<description>Applied on any fds:document having keywords</description>
+			<properties>
+				<!--  INDEXED FIELD : criteria in search form -->
+				<property name="fds:keywords">
+					<title>Keywords</title>
+					<type>d:int</type>
+					<multiple>true</multiple>
+				</property>
+			</properties>
+		</aspect>
+		
+	</aspects>
+</model>

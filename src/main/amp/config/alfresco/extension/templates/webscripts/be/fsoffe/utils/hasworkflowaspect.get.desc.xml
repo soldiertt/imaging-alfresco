@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Check if all items have workflow aspect</shortname>
+	<description>Check if all items have workflow aspect</description>
+	<url>/imaging/utils/hasworkflowaspect</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

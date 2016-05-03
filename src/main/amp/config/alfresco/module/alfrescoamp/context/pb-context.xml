@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<beans>
+
+ 	<!-- Client-Server Datasource bean -->
+    <bean id="csDefaultDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName">
+            <value>${fsoffe.uewimigrationjob.cs.databasedriver}</value>
+        </property>
+        <property name="url">
+            <value>${fsoffe.uewimigrationjob.cs.databaseurl}</value>
+        </property>
+        <property name="defaultAutoCommit" >
+            <value>false</value>
+        </property>
+    </bean>
+    
+	<bean id="csDataSource" class="org.alfresco.config.JndiObjectFactoryBean">
+        <property name="jndiName">
+            <value>java:comp/env/jdbc/csDataSource</value>
+        </property>
+        <property name="defaultObject">
+            <ref bean="csDefaultDataSource" />
+        </property>
+    </bean>
+    
+	<bean id="clientServerDao" class="be.fsoffe.imaging.pb.dao.ClientServerDaoJdbc">
+		<property name="dataSource">
+			<ref bean="csDataSource" />
+		</property>
+	</bean>
+	
+	<bean id="clientServerService" class="be.fsoffe.imaging.pb.service.ClientServerService">
+		<property name="csDao">
+			<ref bean="clientServerDao" />
+		</property>
+	</bean>
+	
+</beans>

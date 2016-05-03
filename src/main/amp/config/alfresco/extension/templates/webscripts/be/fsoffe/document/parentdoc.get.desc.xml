@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Get parent document reference</shortname>
+	<description>Give the nodeRef of the parent document</description>
+	<url>/imaging/document/parentdoc</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

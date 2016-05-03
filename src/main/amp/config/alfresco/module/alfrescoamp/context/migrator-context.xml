@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<!-- Migrator bean definitions -->
+<beans>
+
+	<!-- Uewi Datasource bean -->
+    <bean id="uewiDefaultDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName">
+            <value>${fsoffe.uewimigrationjob.uewi.databasedriver}</value>
+        </property>
+        <property name="url">
+            <value>${fsoffe.uewimigrationjob.uewi.databaseurl}</value>
+        </property>
+        <property name="defaultAutoCommit" >
+            <value>false</value>
+        </property>
+    </bean>
+    
+	<bean id="uewiDataSource" class="org.alfresco.config.JndiObjectFactoryBean">
+        <property name="jndiName">
+            <value>java:comp/env/jdbc/uewiDataSource</value>
+        </property>
+        <property name="defaultObject">
+            <ref bean="uewiDefaultDataSource" />
+        </property>
+    </bean>
+    
+    <bean id="uewiDocumentDao" class="be.fsoffe.imaging.migrator.dao.UewiDocumentDao">
+        <property name="dataSource">
+            <ref bean="uewiDataSource" />
+        </property>
+        <property name="batchSize">
+            <value>${fsoffe.uewimigrationjob.batchsize}</value>
+        </property>
+    </bean>
+    
+    <bean id="clientServerImageDao" class="be.fsoffe.imaging.migrator.dao.ClientServerImageDao">
+        <property name="dataSource">
+            <ref bean="csDataSource" />
+        </property>
+    </bean>
+    
+    <!-- Alfresco Repository Service -->
+    <bean id="alfrescoRepositoryService" class="be.fsoffe.imaging.migrator.service.AlfrescoRepositoryService">
+        <property name="nodeService">
+            <ref bean="nodeService" />
+        </property>
+        <property name="searchService">
+            <ref bean="searchService" />
+        </property>
+        <property name="contentService">
+            <ref bean="contentService" />
+        </property>
+         <property name="fileFolderService">
+            <ref bean="fileFolderService" />
+        </property>
+         <property name="mimetypeService">
+            <ref bean="mimetypeService" />
+        </property>
+    </bean>
+    
+    <!-- FileSystem Service -->
+    <bean id="migratorFileSystemService" class="be.fsoffe.imaging.migrator.service.FileSystemService">
+    	<property name="pathToTrid">
+			<value>${fsoffe.uewimigrationjob.path.trid}</value>
+		</property>
+    	<property name="pathToFFEImports">
+			<value>${fsoffe.uewimigrationjob.path.ffeimports}</value>
+		</property>
+		<property name="pathToATUImports">
+			<value>${fsoffe.uewimigrationjob.path.atuimports}</value>
+		</property>
+		<property name="pathToATUFinal">
+			<value>${fsoffe.uewimigrationjob.path.atufinal}</value>
+		</property>
+		<property name="pathToMainFinal">
+			<value>${fsoffe.uewimigrationjob.path.mainfinal}</value>
+		</property>
+		<property name="pathToArchive">
+			<value>${fsoffe.path.archive}</value>
+		</property>
+		<property name="pathToCertificate">
+			<value>${fsoffe.path.certificate}</value>
+		</property>
+    </bean>
+    
+    <!-- Annotation Service -->
+    <bean id="migratorAnnotationService" class="be.fsoffe.imaging.migrator.service.AnnotationService">
+    </bean>
+</beans>

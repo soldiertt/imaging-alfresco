@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>List all users</shortname>
+	<description>List all users</description>
+	<url>/imaging/user/allusers</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

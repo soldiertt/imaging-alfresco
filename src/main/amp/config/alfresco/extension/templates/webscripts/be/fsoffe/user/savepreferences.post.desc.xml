@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Save user preferences</shortname>
+	<description>Save user preferences</description>
+	<url>/imaging/user/savepreferences</url>
+	<authentication>user</authentication>
+	<family>Imaging Actions</family>
+	<format default="json">argument</format>
+</webscript>

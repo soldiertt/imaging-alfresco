@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Check if annotation edition is allowed</shortname>
+	<description>Check if annotation edition is allowed</description>
+	<url>/imaging/document/allowedit</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

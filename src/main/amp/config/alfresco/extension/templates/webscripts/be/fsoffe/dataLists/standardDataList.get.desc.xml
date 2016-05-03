@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Standard Data List</shortname>
+  <description>Standard Data List</description>
+  <url>/be/fsoffe/standardDataList?type={type}</url>
+  <family>FSO-FFE</family>
+  <format default="json"/>
+  <authentication>user</authentication>
+</webscript>

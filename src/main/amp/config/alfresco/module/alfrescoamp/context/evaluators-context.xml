@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+
+	<!--  EVALUATOR REGISTRY  -->
+	<bean id="evaluator.registry" class="be.fsoffe.imaging.action.evaluator.EvaluatorRegistry" init-method="init">
+	</bean>
+	
+	<!-- PARENT EVALUATOR : just to register them -->
+	<bean id="action.evaluator" abstract="true" class="be.fsoffe.imaging.action.evaluator.RegisteredActionEvaluator">
+		<property name="evaluatorRegistry">
+			<ref bean="evaluator.registry" />
+		</property>
+	</bean>
+	
+	<!-- ***************** ACTION EVALUATORS ******************** -->
+	
+	<!-- IS ADMIN EVALUATOR -->
+	<bean id="imaging.evaluator.userisadmin" class="be.fsoffe.imaging.action.evaluator.UserIsAdmin"
+		parent="action.evaluator">
+		<property name="authService">
+			<ref bean="AuthorityService" />
+		</property>
+	</bean>
+	
+	<!-- HASASPECT WORKITEM EVALUATOR -->
+	<bean id="imaging.evaluator.hasaspectworkitem" class="be.fsoffe.imaging.action.evaluator.HasAspectWorkItem"
+		parent="action.evaluator">
+		<property name="nodeService">
+			<ref bean="NodeService" />
+		</property>
+	</bean>
+	
+	<!-- HASASPECT WORKITEM OR MYPERSONAL EVALUATOR -->
+	<bean id="imaging.evaluator.hasaspectworkitemormypersonal" class="be.fsoffe.imaging.action.evaluator.HasAspectWorkItemOrMyPersonal"
+		parent="action.evaluator">
+		<property name="nodeService">
+			<ref bean="NodeService" />
+		</property>
+	</bean>
+	
+	<!-- MY PERSONAL NOT ALLOWED -->
+	<bean id="imaging.evaluator.mypersonalnotallowed" class="be.fsoffe.imaging.action.evaluator.MyPersonalNotAllowed"
+		parent="action.evaluator">
+		<property name="nodeService">
+			<ref bean="NodeService" />
+		</property>
+		<property name="authenticationService">
+			<ref bean="AuthenticationService" />
+		</property>
+	</bean>
+	
+	<!-- HASASPECT WORKFLOW EVALUATOR -->
+	<bean id="imaging.evaluator.hasaspectworkflow" class="be.fsoffe.imaging.action.evaluator.HasAspectWorkflow"
+		parent="action.evaluator">
+		<property name="nodeService">
+			<ref bean="NodeService" />
+		</property>
+	</bean>
+	
+	<!-- IS IN MY WORKITEMS EVALUATOR -->
+	<bean id="imaging.evaluator.isinmyworkitems" class="be.fsoffe.imaging.action.evaluator.IsInMyWorkItems"
+		parent="action.evaluator">
+		<property name="nodeService">
+			<ref bean="NodeService" />
+		</property>
+		<property name="authenticationService">
+			<ref bean="AuthenticationService" />
+		</property>
+	</bean>
+	
+	<!-- IS IN WORKFLOW -->
+	<bean id="imaging.evaluator.isinworkflow" class="be.fsoffe.imaging.action.evaluator.IsInWorkflow"
+		parent="action.evaluator">
+		<property name="nodeService">
+			<ref bean="NodeService" />
+		</property>
+		<property name="authenticationService">
+			<ref bean="AuthenticationService" />
+		</property>
+	</bean>
+	
+	<!-- HAS ASPECT MY PERSONAL AND I'M NOT THE ASSIGNEE -->
+	<bean id="imaging.evaluator.hasaspectmypersonalandnotassignee" class="be.fsoffe.imaging.action.evaluator.HasAspectMypersonalAndNotAssignee"
+		parent="action.evaluator">
+		<property name="nodeService">
+			<ref bean="NodeService" />
+		</property>
+		<property name="authenticationService">
+			<ref bean="AuthenticationService" />
+		</property>
+	</bean>
+	
+	
+</beans>

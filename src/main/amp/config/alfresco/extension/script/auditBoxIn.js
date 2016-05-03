@@ -1,0 +1,1 @@
+imaging.logAuditBoxEvent(document, "IN");

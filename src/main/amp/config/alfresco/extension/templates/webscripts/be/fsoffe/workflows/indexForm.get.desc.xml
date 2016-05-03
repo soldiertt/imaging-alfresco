@@ -1,0 +1,9 @@
+<webscript>
+	<shortname>Index Form Document</shortname>
+	<description>Index Form Document</description>
+	<url>/imaging/documents/indexForm?nodeRef={nodeRef}</url>
+	<family>Imaging</family>
+	<format default="json"/>
+	<authentication>user</authentication>
+	<transaction>required</transaction>
+</webscript>

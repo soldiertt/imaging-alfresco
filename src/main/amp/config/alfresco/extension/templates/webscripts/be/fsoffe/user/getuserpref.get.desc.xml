@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Return the value of a user preference</shortname>
+	<description>Return the value of a user preference</description>
+	<url>/imaging/user/userpref</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

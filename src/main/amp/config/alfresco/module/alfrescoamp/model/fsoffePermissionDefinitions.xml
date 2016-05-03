@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE permissions >
+
+<permissions>
+	<namespaces>
+		<namespace uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+		<namespace uri="http://www.alfresco.org/model/system/1.0" prefix="sys" />
+		<namespace uri="http://fsoffe.rva.fgov.be/model/fsoffeModel/1.0" prefix="fds" />
+	</namespaces>
+	
+	<permissionSet type="fds:fsoffeModel" expose="selected">
+		<permissionGroup name="OnlyWrite" allowFullControl="false" expose="true">
+			<includePermissionGroup permissionGroup="Consumer" type="cm:cmobject"/>
+			<includePermissionGroup permissionGroup="Write" type="sys:base"/>
+			<includePermissionGroup permissionGroup="WriteProperties" type="sys:base"/>
+			<includePermissionGroup permissionGroup="AddChildren" type="sys:base"/>
+		</permissionGroup>
+	</permissionSet>
+</permissions>

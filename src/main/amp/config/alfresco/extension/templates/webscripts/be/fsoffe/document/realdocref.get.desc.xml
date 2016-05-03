@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Get real document reference</shortname>
+	<description>Give the nodeRef of the first child content item (main document)</description>
+	<url>/imaging/document/realdocref</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Apply workitem aspect</shortname>
+	<description>>Apply workitem aspect to allow viewing the document</description>
+	<url>/imaging/action/viewfromsearch</url>
+	<authentication>user</authentication>
+	<family>Imaging Actions</family>
+	<format default="json">argument</format>
+</webscript>

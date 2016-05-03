@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>Save document metadata</shortname>
+	<description>Save document metadata</description>
+	<url>/imaging/action/savedocument</url>
+	<authentication>user</authentication>
+	<family>Imaging Actions</family>
+	<format default="json">argument</format>
+</webscript>

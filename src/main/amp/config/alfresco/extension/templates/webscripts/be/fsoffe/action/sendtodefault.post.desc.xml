@@ -1,0 +1,9 @@
+<webscript>
+	<shortname>Start Imaging Processing Workflow</shortname>
+	<description>Start Imaging Processing Workflow</description>
+	<url>/imaging/action/sendtodefault</url>
+	<family>Imaging Actions</family>
+	<format default="json">argument</format>
+	<authentication>user</authentication>
+	<transaction>required</transaction>
+</webscript>

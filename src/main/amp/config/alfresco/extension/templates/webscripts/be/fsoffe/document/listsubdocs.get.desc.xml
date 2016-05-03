@@ -1,0 +1,8 @@
+<webscript>
+	<shortname>List documents imports or notes</shortname>
+	<description>List available imports or notes inside a document</description>
+	<url>/imaging/document/listsubdocs</url>
+	<authentication>user</authentication>
+	<family>Imaging</family>
+	<format default="json">argument</format>
+</webscript>

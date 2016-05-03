@@ -1,0 +1,3 @@
+{
+"serviceclient" : "${serviceclient?string}"
+}

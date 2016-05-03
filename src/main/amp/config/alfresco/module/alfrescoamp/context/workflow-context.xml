@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+<beans>
+
+	<!-- Registration of workflow models -->
+	<bean id="fsoffe.workflowBootstrap" parent="workflowDeployer">
+		<property name="models">
+			<list>
+				<value>alfresco/module/alfrescoamp/model/fsoffeWkModel.xml</value>
+			</list>
+		</property>
+	</bean>
+</beans>

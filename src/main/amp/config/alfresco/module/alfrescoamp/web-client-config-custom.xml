@@ -1,0 +1,137 @@
+<alfresco-config>
+
+	<config evaluator="string-compare" condition="Languages" replace="true">
+		<languages>
+			<language locale="en_US">English</language>
+		</languages>
+	</config>
+
+	<!-- CONTENT TYPES DISPLAYABLE PROPERTIES -->
+	
+	<config evaluator="node-type" condition="fds:content">
+		<property-sheet>
+			<show-property name="fds:contentOrigin" />
+		</property-sheet>
+	</config>
+	
+	<config evaluator="node-type" condition="fds:document">
+		<property-sheet>
+			<show-property name="fds:docType" />
+			<show-property name="fds:docClass" />
+			<show-property name="fds:docSource" />
+			<show-property name="fds:docPriority" />
+			<show-property name="fds:docLinked" />
+			<show-property name="fds:docInDate" />
+			<show-property name="fds:docLetter" />
+			<show-property name="fds:docLetterType" />
+			<show-property name="fds:docDossierNr" />
+			<show-property name="fds:docProcessedBy" />
+		</property-sheet>
+	</config>
+	
+	<!-- ASPECTS DISPLAYABLE PROPERTIES -->
+	
+	<config evaluator="aspect-name" condition="fds:archived">
+		<property-sheet>
+			<show-property name="fds:archivedDate" />
+		</property-sheet>
+	</config>
+	
+	<config evaluator="aspect-name" condition="fds:legacyDoc">
+		<property-sheet>
+			<separator name="sepLegacy" display-label="Legacy document" component-generator="HeaderSeparatorGenerator" />
+			<show-property name="fds:legacyDocId" />
+			<show-property name="fds:legacyWip" />
+		</property-sheet>
+	</config>
+	
+	<config evaluator="aspect-name" condition="fds:workflow">
+		<property-sheet>
+			<separator name="sepWorkflow" display-label="Workflow" component-generator="HeaderSeparatorGenerator" />
+			<show-property name="fds:workExpeditor" />
+			<show-property name="fds:workAssignee" />
+			<show-property name="fds:workBox" />
+			<show-property name="fds:workEntryTime" />
+			<show-property name="fds:workDossierStatus" />
+			<show-property name="fds:workPending" />
+			<show-property name="fds:wkMessage" />
+			<show-property name="fds:varDestination" />
+			<show-property name="fds:varDefaultDestination" />
+			<show-property name="fds:varStandardWorkset" />
+			<show-property name="fds:varNextWorkset" />
+			<show-property name="fds:varCountCollaborative" />
+			<show-property name="fds:varFirstRun" />
+			<show-property name="fds:varAssignee" />
+		</property-sheet>
+	</config>
+	
+	<config evaluator="aspect-name" condition="fds:workitem">
+		<property-sheet>
+			<separator name="sepWorkitem" display-label="Work item" component-generator="HeaderSeparatorGenerator" />
+			<show-property name="fds:itemOwner" />
+			<show-property name="fds:itemEntryTime" />
+		</property-sheet>
+	</config>
+	
+    <config evaluator="aspect-name" condition="fds:mypersonal">
+      <property-sheet>
+        <separator name="sepMypersonal" display-label="My Personal" component-generator="HeaderSeparatorGenerator" />
+        <show-property name="fds:mypersExpeditor" />
+        <show-property name="fds:mypersAssignee" />
+        <show-property name="fds:mypersEntrytime" />
+        <show-property name="fds:mypersType" />
+      </property-sheet>
+    </config>
+  
+  	<config evaluator="aspect-name" condition="fds:indexControl">
+      <property-sheet>
+        <separator name="sepIndexControl" display-label="fds Index Control" component-generator="HeaderSeparatorGenerator" />
+        <show-property name="cm:isIndexed" />
+        <show-property name="cm:isContentIndexed" />
+      </property-sheet>
+    </config>
+    
+	<!-- CONTENT WIZARDS -->
+	
+	<config evaluator="string-compare" condition="Content Wizards">
+      <content-types>
+         <type name="fds:content" />
+      </content-types>
+    </config>
+   
+    <!-- SPACE WIZARDS -->
+    
+    <config evaluator="string-compare" condition="Space Wizards">
+      <folder-types>
+         <type name="fds:folder" />
+         <type name="fds:document" />
+      </folder-types>
+   </config>
+   
+	<!-- ACTION WIZARDS -->
+	
+	<config evaluator="string-compare" condition="Action Wizards">
+		<aspects>
+			<aspect name="fds:legacyDoc" />
+			<aspect name="fds:outgoing" />
+			<aspect name="fds:workflow" />
+			<aspect name="fds:workitem" />
+            <aspect name="fds:mypersonal" />
+            <aspect name="fds:indexControl" />
+		</aspects>
+		
+		<subtypes>
+			<type name="fds:content" />
+			<type name="fds:folder" />
+			<type name="fds:document" />
+		</subtypes>
+		
+		<specialise-types>
+    		<type name="fds:folder"/>
+    		<type name="fds:content"/>
+    		<type name="fds:document" />
+    	</specialise-types>
+    	
+	</config>
+	
+</alfresco-config>
