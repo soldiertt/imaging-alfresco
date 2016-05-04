@@ -76,7 +76,7 @@
 		   <groupId>org.alfresco.daeja</groupId>
 		   <artifactId>daeja-integration</artifactId>
 		   <type>amp</type>
-		   <version>4.x</version>
+		   <version>4.1.5</version>
 		</dependency>
 		<dependency>
 		   <groupId>org.alfresco</groupId>
