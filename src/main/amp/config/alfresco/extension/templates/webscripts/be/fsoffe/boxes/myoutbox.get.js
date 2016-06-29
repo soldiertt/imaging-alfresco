@@ -9,7 +9,7 @@ function getOutBoxFrom(user) {
               
     var results = search.query(def);
     
-    if(results != null) {
+    if (results != null) {
     	return results;
     }
         
@@ -60,11 +60,13 @@ function getImagingParameter(parameterName) {
             
     var results = search.query(def);
           
-    if(results != null) {
+    if (results != null && results[0]) {
     	value = results[0].properties["fds:valueParam"] ;
-                 
+    } else {
+    	value = 7; //Default
     }
-return value;
+
+    return value;
       
 }
 
